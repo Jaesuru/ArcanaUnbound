@@ -8,6 +8,7 @@ class Room:
         self.description = description
         self.items = items if items else []
         self.monsters = monsters if monsters else []
+        self.subrooms = []
 
     def describe(self):
         type_text(f"{self.name}")
@@ -28,7 +29,7 @@ def generate_forest_name():
     return f"{adjective} {noun}", adjective
 
 
-def generate_description(adjective):
+def generate_description_forest(adjective):
     descriptions = {
         "Mystic": [
             "A place shrouded in mystery, where the air hums with magic.",
@@ -58,3 +59,11 @@ def generate_description(adjective):
 
     return random.choice(descriptions.get(adjective, ["A mysterious forest with unique characteristics."]))
 
+
+def add_subroom(self, subroom):
+    self.subrooms.append(subroom)
+
+
+def describe_subrooms(self):
+    for subroom in self.subrooms:
+        subroom.describe(self.name)

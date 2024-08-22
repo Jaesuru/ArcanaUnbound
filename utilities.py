@@ -2,7 +2,7 @@ import sys
 import time
 
 
-def type_text(text, delay=0.001):
+def type_text(text, delay=0.03):
     for char in text:
         sys.stdout.write(char)
         sys.stdout.flush()
@@ -11,4 +11,4 @@ def type_text(text, delay=0.001):
 
 
 def lines(length):
-    print('=' * length)
+    print("+" + '=' * length + "+")
