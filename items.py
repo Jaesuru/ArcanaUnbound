@@ -4,21 +4,26 @@ from utilities import type_text
 
 
 class Item:
-    def __init__(self, name, item_type, damage=0, critical_chance=0):
+    def __init__(self, name, item_type, damage=0, critical_chance=0, value=0):
         self.name = name
         self.item_type = item_type
         self.damage = damage
         self.critical_chance = critical_chance
+        self.value = value  # Value for currency items
 
     def __str__(self):
-        return self.name
+        if self.item_type == "Currency":
+            return f"{self.name} (Value: {self.value})"
+        else:
+            return (f"{self.name} (Type: {self.item_type}, Damage: {self.damage}, "
+                    f"Critical Chance: {self.critical_chance}%)")
 
     def describe(self):
-        description = f"{self.name}: Type: {self.item_type}"
-        if self.damage > 0:
-            description += f", Damage: {self.damage}"
-        if self.critical_chance > 0:
-            description += f", Critical Chance: {self.critical_chance}%"
+        description = f"Item: {self.name}\nType: {self.item_type}"
+        if self.item_type == "Weapon":
+            description += f"\nDamage: {self.damage}\nCritical Chance: {self.critical_chance}%"
+        elif self.item_type == "Currency":
+            description += f"\nValue: {self.value} gold"
         return description
 
     def calculate_damage(self):
@@ -170,3 +175,163 @@ def create_weapon(player_class, generate_class_specific=True):
         critical_chance = 50
 
     return Item(name=name, item_type=item_type, damage=damage, critical_chance=critical_chance)
+
+
+def generate_powerful_weapon_name():
+    adjectives = ["Mythical", "Serrated", "Divine", "Ethereal", "Legendary", "Arcane"]
+    materials = ["Mythril", "Adamantite", "Obsidian", "Dragonscale", "Celestial", "Ebonite"]
+    nouns = ["Sword", "Staff", "Dagger"]
+
+    adjective = random.choice(adjectives)
+    material = random.choice(materials)
+    noun = random.choice(nouns)
+    return f"{adjective} {material} {noun}"
+
+
+def create_powerful_weapon(player_class, generate_class_specific=True):
+    item_type = "Weapon"
+
+    # 5% chance to get a special item
+    if random.random() < 0.05:
+        return Item(name="Ancient Artifact", item_type=item_type, damage=40, critical_chance=60)
+
+    # Generate a class-specific weapon if requested
+    if generate_class_specific:
+        specific_weapon = None
+        if player_class == "Warrior":
+            specific_weapon = "Sword"
+        elif player_class == "Mage":
+            specific_weapon = "Staff"
+        elif player_class == "Rogue":
+            specific_weapon = "Dagger"
+
+        if specific_weapon:
+            name = f"Class-Specific {specific_weapon}"
+            # Define material damage additiveness
+            material_damage_additives = {
+                "Mythril": 10,  # Adds 10 damage
+                "Adamantite": 12,  # Adds 12 damage
+                "Obsidian": 8,  # Adds 8 damage
+                "Dragonscale": 15,  # Adds 15 damage
+                "Celestial": 14,  # Adds 14 damage
+                "Ebonite": 9  # Adds 9 damage
+            }
+
+            # Define adjective damage modifiers
+            adjective_damage_modifiers = {
+                "Mythical": 20,  # Adds 20 damage
+                "Serrated": 12,  # Adds 12 damage
+                "Divine": 25,  # Adds 25 damage
+                "Ethereal": 18,  # Adds 18 damage
+                "Legendary": 30,  # Adds 30 damage
+                "Arcane": 15  # Adds 15 damage
+            }
+
+            # Generate the weapon name and extract properties
+            weapon_name = generate_powerful_weapon_name()
+            parts = weapon_name.split()
+            adjective = parts[0]
+            material = parts[1]
+            noun = parts[-1]
+
+            # Calculate damage with additive effects from material and adjective
+            damage = random.randint(20, 30) + material_damage_additives.get(material, 0)
+            damage += adjective_damage_modifiers.get(adjective, 0)
+
+            # Set weapon-specific properties based on the noun
+            if noun == "Sword":
+                critical_chance = 50
+            elif noun == "Staff":
+                critical_chance = 40
+            elif noun == "Dagger":
+                critical_chance = 60
+
+            return Item(name=name, item_type=item_type, damage=damage, critical_chance=critical_chance)
+
+    # If no class-specific weapon was generated, return a powerful random weapon
+    name = generate_powerful_weapon_name()
+    # Extract the adjective, material, and noun from the weapon name
+    parts = name.split()
+    adjective = parts[0]
+    material = parts[1]
+    noun = parts[-1]
+
+    # Define default critical chance
+    critical_chance = 0
+
+    # Define material damage additiveness and adjective damage modifiers
+    material_damage_additives = {
+        "Mythril": 10,
+        "Adamantite": 12,
+        "Obsidian": 8,
+        "Dragonscale": 15,
+        "Celestial": 14,
+        "Ebonite": 9
+    }
+    adjective_damage_modifiers = {
+        "Mythical": 20,
+        "Serrated": 12,
+        "Divine": 25,
+        "Ethereal": 18,
+        "Legendary": 30,
+        "Arcane": 15
+    }
+
+    # Calculate damage with additive effects
+    damage = random.randint(20, 30) + material_damage_additives.get(material, 0)
+    damage += adjective_damage_modifiers.get(adjective, 0)
+
+    # Set weapon-specific properties based on the noun
+    if noun == "Sword":
+        critical_chance = 50
+    elif noun == "Staff":
+        critical_chance = 40
+    elif noun == "Dagger":
+        critical_chance = 60
+
+    return Item(name=name, item_type=item_type, damage=damage, critical_chance=critical_chance)
+
+
+def generate_graveyard_items():
+    item_type = "Weapon"
+
+    # Define spooky-themed adjectives and nouns
+    adjectives = ["Haunted", "Eerie", "Cursed", "Ghostly", "Spectral", "Mournful"]
+    nouns = ["Bonesaw", "Scythe", "Spade", "Gravepicker", "Skullcrusher", "Wraithblade"]
+
+    # Define material damage additiveness and adjective damage modifiers
+    material_damage_additives = {
+        "Wooden": 0,
+        "Iron": 2,
+        "Golden": 4,
+        "Steel": 3,
+        "Bronze": 1,
+        "Bone": 1  # Bones are spooky, but not too strong
+    }
+    adjective_damage_modifiers = {
+        "Haunted": 2,
+        "Eerie": 1,
+        "Cursed": -3,
+        "Ghostly": 2,
+        "Spectral": 1,
+        "Mournful": 0
+    }
+
+    # Generate random adjective and noun
+    adjective = random.choice(adjectives)
+    noun = random.choice(nouns)
+    material = "Bone"  # Spooky-themed weapons use bone as the base material
+
+    # Generate weapon name and calculate damage
+    name = f"{adjective} {material} {noun}"
+    damage = random.randint(5, 15) + material_damage_additives.get(material, 0)
+    damage += adjective_damage_modifiers.get(adjective, 0)
+
+    # Set critical chance
+    critical_chance = 20  # Default critical chance for spooky-themed weapons
+
+    return Item(name=name, item_type=item_type, damage=damage, critical_chance=critical_chance)
+
+
+def generate_graveyard_monsters():
+    return ["Skeleton", "Zombie", "Ghost", "Wraith", "Banshee", "Monkey", "Rotdog", "Ghoul"]
