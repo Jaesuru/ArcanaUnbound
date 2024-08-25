@@ -176,10 +176,6 @@ def generate_description_boss_castle(adjective):
             "A once-grand castle now left to ruin, its majestic walls crumbling and its halls echoing with the sound of desolation.",
             "A forsaken stronghold, abandoned and decayed, with an aura of melancholy and lost grandeur."
         ],
-        "Majestic": [
-            "A stunning castle of breathtaking design, with towering spires and intricate decorations that speak of unparalleled magnificence.",
-            "An awe-inspiring stronghold, where every room is a masterpiece of architectural splendor and grandeur."
-        ],
         "Dreadful": [
             "A dreadful fortress filled with sinister traps and dark secrets, its ominous presence a constant threat to all who enter.",
             "A terrifying stronghold where nightmares take shape and the very walls seem to whisper of impending doom."

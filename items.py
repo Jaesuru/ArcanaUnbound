@@ -13,7 +13,9 @@ class Item:
 
     def __str__(self):
         if self.item_type == "Currency":
-            return f"{self.name} (Value: {self.value})"
+            return f"{self.name} (Value: {self.value}g)"
+        elif self.item_type == "Potion":
+            return f"{self.name}"
         else:
             return (f"{self.name} (Type: {self.item_type}, Damage: {self.damage}, "
                     f"Critical Chance: {self.critical_chance}%)")
@@ -193,7 +195,7 @@ def create_powerful_weapon(player_class, generate_class_specific=True):
 
     # 5% chance to get a special item
     if random.random() < 0.05:
-        return Item(name="Ancient Artifact", item_type=item_type, damage=40, critical_chance=60)
+        return Item(name="Ancient Stick", item_type=item_type, damage=40, critical_chance=60)
 
     # Generate a class-specific weapon if requested
     if generate_class_specific:
@@ -295,7 +297,6 @@ def create_powerful_weapon(player_class, generate_class_specific=True):
 def generate_graveyard_items():
     item_type = "Weapon"
 
-    # Define spooky-themed adjectives and nouns
     adjectives = ["Haunted", "Eerie", "Cursed", "Ghostly", "Spectral", "Mournful"]
     nouns = ["Bonesaw", "Scythe", "Spade", "Gravepicker", "Skullcrusher", "Wraithblade"]
 
@@ -306,7 +307,7 @@ def generate_graveyard_items():
         "Golden": 4,
         "Steel": 3,
         "Bronze": 1,
-        "Bone": 1  # Bones are spooky, but not too strong
+        "Bone": 2
     }
     adjective_damage_modifiers = {
         "Haunted": 2,
@@ -317,7 +318,6 @@ def generate_graveyard_items():
         "Mournful": 0
     }
 
-    # Generate random adjective and noun
     adjective = random.choice(adjectives)
     noun = random.choice(nouns)
     material = "Bone"  # Spooky-themed weapons use bone as the base material
@@ -328,7 +328,7 @@ def generate_graveyard_items():
     damage += adjective_damage_modifiers.get(adjective, 0)
 
     # Set critical chance
-    critical_chance = 20  # Default critical chance for spooky-themed weapons
+    critical_chance = 25  # Default critical chance for spooky-themed weapons
 
     return Item(name=name, item_type=item_type, damage=damage, critical_chance=critical_chance)
 

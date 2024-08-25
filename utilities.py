@@ -10,7 +10,7 @@ def type_text(text, delay=0.02):
     print()
 
 
-def type_text_fast(text, delay=0.01):
+def type_text_fast(text, delay=0.001):
     for char in text:
         sys.stdout.write(char)
         sys.stdout.flush()

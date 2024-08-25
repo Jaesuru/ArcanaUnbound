@@ -4,7 +4,7 @@ import random
 import sys
 import time
 
-from items import HealthPotion, create_powerful_weapon, create_weapon, ManaPotion, generate_graveyard_items, Item
+from items import HealthPotion, create_weapon, ManaPotion, generate_graveyard_items, Item
 from utilities import lines, type_text
 
 
@@ -16,10 +16,8 @@ class Combat:
     def calculate_damage(self):
         if self.player.equipped_weapon:
             weapon = self.player.equipped_weapon
-            # Example calculation: Base damage + weapon's damage + random bonus
             return weapon.damage + random.randint(0, 5)
         else:
-            # Default low damage if no weapon is equipped
             return random.randint(1, 5)
 
     def player_turn(self):
@@ -37,7 +35,7 @@ class Combat:
 
         if choice == '1' or choice == 'A' or choice == 'a':
             attack_damage = self.calculate_damage()
-            type_text(f"\nYou attack the {self.monster.name} for {attack_damage} damage!")
+            type_text(f"\n* You attack the {self.monster.name} for {attack_damage} damage!")
             self.monster.update_health(-attack_damage)
             time.sleep(2)
         elif choice == '2' or choice == 'U' or choice == 'u':
@@ -53,24 +51,29 @@ class Combat:
         return True
 
     def monster_turn(self):
-        attack_damage = random.randint(5, 15)  # Example damage range
-        type_text(f"\nThe {self.monster.name} attacks you for {attack_damage} damage!\n")
+        attack_damage = self.monster.attack_damage
+        type_text(f"\n* The {self.monster.name} attacks you for {attack_damage} damage!\n")
         self.player.update_health(-attack_damage)
         time.sleep(2)
 
     def start_combat(self):
-        type_text(f"\nA wild {self.monster.name} appears! Battle begins!")
+        type_text(f"\nThe {self.monster.name} appears! Commence battle!")
         while self.player.health > 0 and self.monster.hp > 0:
             if not self.player_turn():
                 break
             if self.monster.hp <= 0:
                 type_text(f"\nYou have defeated the {self.monster.name}!")
                 loot = self.generate_loot()
-                type_text("\nYou found the following loot:")
-                for item in loot:
-                    self.player.add_to_inventory(item)
-                    type_text(f"- {item}")
+                if loot:
+                    type_text("\nYou found the following loot:")
+                    for item in loot:
+                        self.player.add_to_inventory(item)
+                else:
+                    type_text(f"\nThe {self.monster.name} didn't have any goods on it, unfortunately.")
                 self.monster = None
+                time.sleep(2)
+                type_text("\nExiting battle...")
+                time.sleep(1)
                 break
             self.monster_turn()
             if self.player.health <= 0:
@@ -85,25 +88,22 @@ class Combat:
                 type_text("Goodbye for now.")
                 time.sleep(3)
                 sys.exit()
-                break
 
     def generate_loot(self):
         loot = []
-        # Define probabilities for different loot types
-        if random.random() < 0.2:  # 20% chance for potions
+        if random.random() < 0.5:
             potion_type = random.choice(["Health Potion", "Mana Potion"])
             loot.append(
                 HealthPotion(name=potion_type) if potion_type == "Health Potion" else ManaPotion(name=potion_type))
 
-        # Define probabilities for weapons
-        if random.random() < 0.4:  # 40% chance for a weapon
+        if random.random() < 0.5:
             if random.random() < 0.6:
                 loot.append(generate_graveyard_items())
             else:
                 loot.append(create_weapon(self.player))
 
-        if random.random() < 0.3:  # 30% chance for gold
-            gold_amount = random.randint(10, 100)  # Random amount of gold between 10 and 100
+        if random.random() < 0.5:
+            gold_amount = random.randint(10, 100)
             loot.append(Item(name="Pouch o' Gold", item_type="Currency", value=gold_amount))
 
         return loot

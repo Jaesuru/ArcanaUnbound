@@ -49,17 +49,17 @@ class Player:
         self.health += amount
         if self.health <= 0:
             self.health = 0
-            type_text(f"{self.name} has been defeated.")
+            type_text(f"* {self.name} has been defeated.")
         else:
-            type_text(f"{self.name}'s health is now {self.health}.")
+            type_text(f"* {self.name}'s health is now {self.health}.")
 
     def update_mana(self, amount):
         self.mana += amount
         if self.mana < 0:
             self.mana = 0
-            type_text(f"{self.name} has exhausted their mana.")
+            type_text(f"* {self.name} has exhausted their mana.")
         else:
-            type_text(f"{self.name}'s mana is now {self.mana}.")
+            type_text(f"* {self.name}'s mana is now {self.mana}.")
 
     def add_to_inventory(self, item):
         self.inventory.append(item)
@@ -76,7 +76,6 @@ class Player:
             type_text("Your inventory is empty.")
 
     def equip_weapon(self, weapon_name):
-        # Normalize input and compare with inventory items
         normalized_weapon_name = weapon_name.lower()
         for item in self.inventory:
             if isinstance(item, Item) and item.item_type == "Weapon":
@@ -87,7 +86,7 @@ class Player:
         type_text(f"\n* {weapon_name} is not in your inventory.")
 
     def display_health(self):
-        type_text(f"{self.name}'s current health: {self.health}/{self.max_health}")
+        type_text(f"* {self.name}'s current health: {self.health}/{self.max_health}")
 
     def display_mana(self):
-        type_text(f"{self.name}'s current mana: {self.mana}/{self.max_mana}")
+        type_text(f"* {self.name}'s current mana: {self.mana}/{self.max_mana}")
